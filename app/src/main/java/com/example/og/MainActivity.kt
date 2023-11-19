@@ -115,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //CRUD
     fun display() {
 
         var URLL: String = url + "display.php"
