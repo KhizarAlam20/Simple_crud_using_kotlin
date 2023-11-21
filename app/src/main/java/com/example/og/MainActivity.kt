@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     var arrayListEmployee: ArrayList<employees> = ArrayList()
     lateinit var listAdapter: ListAdapter
 
-    var url: String = "https://192.168.10.7/api/"
+    var url: String = "https://192.168.10.3/api/"
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,15 +142,20 @@ class MainActivity : AppCompatActivity() {
                         for (i in 0 until jsonArray.length()) {
                             val obj = jsonArray.getJSONObject(i)
 
-                            val id = obj.getString("id")
+                            val idV = obj.getString("id")
                             val name = obj.getString("name")
                             val email = obj.getString("email")
                             val password = obj.getString("password")
 
                             perf.text = name
-                            val employee = employees(id, name, email, password)
-                            arrayListEmployee.add(employee)
-                            listAdapter.notifyDataSetChanged()
+
+                            if (idV.equals(id.text.toString())) {
+                                val employee = employees(idV, name, email, password)
+                                arrayListEmployee.add(employee)
+                                listAdapter.notifyDataSetChanged()
+                            }else{
+                                Toast.makeText(this@MainActivity, "No Matching id found", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     } else {
                         // Handle the error condition
@@ -246,13 +251,14 @@ class MainActivity : AppCompatActivity() {
         requestQueue.add(stringRequest)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun delete() {
-        val idValue: String =id.text.toString().trim()
+        val idValue: String = id.text.toString().trim()
 
-            if (idValue.isEmpty()) {
-                Toast.makeText(this, "Enter ID", Toast.LENGTH_SHORT).show()
-                return
-            }
+        if (idValue.isEmpty()) {
+            Toast.makeText(this, "Enter ID", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         var URL: String = url + "delete.php"
 
